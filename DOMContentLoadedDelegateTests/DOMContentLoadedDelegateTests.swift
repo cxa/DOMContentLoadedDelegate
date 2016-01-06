@@ -1,0 +1,34 @@
+//
+//  DOMContentLoadedDelegateTests.swift
+//  DOMContentLoadedDelegateTests
+//
+//  Created by CHEN Xian’an on 1/6/16.
+//  Copyright © 2016 lazyapps. All rights reserved.
+//
+
+import XCTest
+@testable import DOMContentLoadedDelegate
+
+class DOMContentLoadedDelegateTests: XCTestCase, DOMContentLoadedDelegate {
+  
+  var DOMContentLoaded = false
+  
+  var DOMContentLoadedExp: XCTestExpectation?
+  
+  func testDOMContentLoaded() {
+    let webView = UIWebView(frame: CGRectZero)
+    webView.delegate = self
+    webView.loadRequest(NSURLRequest(URL: NSURL(string: "https://www.baidu.com/")!))
+    DOMContentLoadedExp = expectationWithDescription(__FUNCTION__)
+    waitForExpectationsWithTimeout(5) { error in
+      print(error)
+      XCTAssertTrue(self.DOMContentLoaded)
+    }
+  }
+  
+  func DOMContentLoaded(webView: UIWebView) {
+    DOMContentLoaded = true
+    DOMContentLoadedExp?.fulfill()
+  }
+  
+}
