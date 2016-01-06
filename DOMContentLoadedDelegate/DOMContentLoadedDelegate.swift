@@ -37,7 +37,7 @@ private extension UIWebView {
   
 }
 
-private let JSContextDidCreateNotificaiton = "com.lazyapps.WebViewDOMDelegate.JSContextDidCreateNotificaiton"
+private let JSContextDidCreateNotificaiton = "DOMContentLoadedDelegate.JSContextDidCreateNotificaiton"
 
 private extension NSObject {
   

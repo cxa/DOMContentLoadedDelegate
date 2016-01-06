@@ -6,9 +6,9 @@ Need to evaluate JS on `UIWebView` safely? Wait until `- webViewDidFinishLoad:`.
 
 1. Add the `DOMContentLoadedDelegate` repository as a submodule of your application’s repository.
 2. Drag and drop `DOMContentLoadedDelegate.xcodeproj` into your application’s Xcode project or workspace.
-3. On the “General” tab of your application target’s settings, add `DOMContentLoadedDelegate.framework` and Result.framework to the “Embedded Binaries” section.
+3. On the “General” tab of your application target’s settings, add `DOMContentLoadedDelegate.framework` to the “Embedded Binaries” section.
 
-Set your class confirms to `DOMContentLoadedDelegate` and do things that required to access DOM in `DOMContentLoaded:`.
+Set your class confirms to `DOMContentLoadedDelegate` and do things that required to access DOM in `- DOMContentLoaded:`.
 
 Or, If you would prefer to use Carthage or CocoaPods, please pull request.
 
@@ -20,4 +20,4 @@ Or, If you would prefer to use Carthage or CocoaPods, please pull request.
 
 ## License
 
-`DOMContentLoadedDelegate` is released under the MIT license. In short, it's royalty-free but you must you keep the copyright notice in your code or software distribution.
+`DOMContentLoadedDelegate` is released under the MIT license. In short, it's royalty-free but you must keep the copyright notice in your code or software distribution.
