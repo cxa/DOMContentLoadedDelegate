@@ -10,6 +10,8 @@ Need to evaluate JS on `UIWebView` safely? Wait until `- webViewDidFinishLoad:`.
 
 Set your class confirms to `DOMContentLoadedDelegate` and do things that required to access DOM in `- DOMContentLoaded:`.
 
+See a real usage inside `Demo` folder.
+
 Or, If you would prefer to use Carthage or CocoaPods, please pull request.
 
 ## About Me
