@@ -11,7 +11,7 @@ import DOMContentLoadedDelegate
 
 class ViewController: UIViewController {
 
-  lazy private(set) var webView: UIWebView = {
+  lazy private var webView: UIWebView = {
     let w = UIWebView(frame: CGRectZero)
     w.translatesAutoresizingMaskIntoConstraints = false
     w.delegate = self
@@ -28,7 +28,7 @@ class ViewController: UIViewController {
       webView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor)
     ])
     
-    guard let url = NSURL(string: "https://500px.com") else { fatalError("Fail to construct URL") }
+    guard let url = NSURL(string: "https://en.wikipedia.org/wiki/Special:Random") else { fatalError("Fail to construct URL") }
     webView.loadRequest(NSURLRequest(URL: url))
   }
 
@@ -46,7 +46,7 @@ extension ViewController: DOMContentLoadedDelegate {
   }
   
   func DOMContentLoaded(webView: UIWebView) {
-    print("DOMContentLoaded be called before webViewDidFinishLoad: ", NSDate())
+    print("DOM accessible, e.g. you can get document title now: ", webView.stringByEvaluatingJavaScriptFromString("document.title"), " ", NSDate())
   }
   
 }

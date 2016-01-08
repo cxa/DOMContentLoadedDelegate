@@ -61,18 +61,19 @@ private final class JSContextObserver: NSObject {
     NSNotificationCenter.defaultCenter().addObserverForName(JSContextDidCreateNotificaiton, object: nil, queue: nil, usingBlock: handleJSContextDidCreateNotitification)
   }
   
-  func handleJSContextDidCreateNotitification(note: NSNotification) {
+  func handleJSContextDidCreateNotitification(notifaction: NSNotification) {
     guard
-      let noteCtx = note.object as? JSContext,
+      let jsContextInNotification = notifaction.object as? JSContext,
       let jsContext = webView?.valueForKeyPath("documentView.webView.mainFrame.javaScriptContext") as? JSContext,
-      let domDelegate = webView?.delegate as? DOMContentLoadedDelegate where jsContext == noteCtx
+      let domDelegate = webView?.delegate as? DOMContentLoadedDelegate where jsContext == jsContextInNotification
     else { return }
     
     let funcObj: @convention(block) () -> () = { [weak self, weak domDelegate] in
-      if let wv = self?.webView { domDelegate?.DOMContentLoaded(wv) }
+      guard let wv = self?.webView else { return }
+      domDelegate?.DOMContentLoaded(wv)
     }
     
-    let funcName = "com_lazyapps_DOMContentDidLoad"
+    let funcName = "com_lazyapps_DOMContentLoaded"
     jsContext.setObject(unsafeBitCast(funcObj, AnyObject.self), forKeyedSubscript: funcName)
     jsContext.evaluateScript("addEventListener('DOMContentLoaded', \(funcName))")
   }
