@@ -9,9 +9,9 @@
 import UIKit
 import JavaScriptCore
 
-public protocol DOMContentLoadedDelegate: UIWebViewDelegate {
+@objc public protocol DOMContentLoadedDelegate: UIWebViewDelegate {
   
-  func DOMContentLoaded(webView: UIWebView)
+  optional func DOMContentLoaded(webView: UIWebView)
   
 }
 
@@ -62,15 +62,20 @@ private final class JSContextObserver: NSObject {
   }
   
   func handleJSContextDidCreateNotitification(notifaction: NSNotification) {
+    let sel: Selector = "DOMContentLoaded:"
     guard
       let jsContextInNotification = notifaction.object as? JSContext,
       let jsContext = webView?.valueForKeyPath("documentView.webView.mainFrame.javaScriptContext") as? JSContext,
-      let domDelegate = webView?.delegate as? DOMContentLoadedDelegate where jsContext == jsContextInNotification
+      let delegate = webView?.delegate where jsContext == jsContextInNotification && delegate.respondsToSelector(sel)
     else { return }
     
-    let funcObj: @convention(block) () -> () = { [weak self, weak domDelegate] in
-      guard let wv = self?.webView else { return }
-      domDelegate?.DOMContentLoaded(wv)
+    let funcObj: @convention(block) () -> () = { [weak self, weak delegate] in
+      guard
+        let webView = self?.webView,
+        let dlg = delegate
+      else { return }
+      
+      dlg.performSelector(sel, withObject: webView)
     }
     
     let funcName = "com_lazyapps_DOMContentLoaded"
