@@ -17,22 +17,10 @@ import JavaScriptCore
 
 private extension UIWebView {
   
-  func registerJSContextObserver() {
+  @objc func registerJSContextObserver() {
     let observer = JSContextObserver(webView: self)
     let key: StaticString = __FUNCTION__
     objc_setAssociatedObject(self, key.utf8Start, observer, .OBJC_ASSOCIATION_RETAIN)
-  }
-  
-  @objc func DOMContentLoadedDelegate_initWithCoder(coder: NSCoder) -> Self {
-    let me = DOMContentLoadedDelegate_initWithCoder(coder)
-    me.registerJSContextObserver()
-    return me
-  }
-  
-  @objc func DOMContentLoadedDelegate_initWithFrame(frame: CGRect) -> Self {
-    let me = DOMContentLoadedDelegate_initWithFrame(frame)
-    me.registerJSContextObserver()
-    return me
   }
   
 }

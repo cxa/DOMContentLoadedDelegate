@@ -18,9 +18,9 @@ class DOMContentLoadedDelegateTests: XCTestCase, DOMContentLoadedDelegate {
   func testDOMContentLoaded() {
     let webView = UIWebView(frame: CGRectZero)
     webView.delegate = self
-    webView.loadRequest(NSURLRequest(URL: NSURL(string: "https://www.baidu.com/")!))
+    webView.loadRequest(NSURLRequest(URL: NSURL(string: "https://en.wikipedia.org/wiki/Special:Random")!))
     DOMContentLoadedExp = expectationWithDescription(__FUNCTION__)
-    waitForExpectationsWithTimeout(5) { error in
+    waitForExpectationsWithTimeout(15) { error in
       print(error)
       XCTAssertTrue(self.DOMContentLoaded)
     }
