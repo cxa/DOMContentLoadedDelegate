@@ -63,7 +63,9 @@ private final class JSContextObserver: NSObject {
         let dlg = delegate
       else { return }
       
-      dlg.performSelector(sel, withObject: webView)
+      NSOperationQueue.mainQueue().addOperationWithBlock {
+        dlg.performSelector(sel, withObject: webView)
+      }
     }
     
     let funcName = "com_lazyapps_DOMContentLoaded"
