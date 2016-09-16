@@ -19,8 +19,8 @@ private extension UIWebView {
   
   @objc func registerJSContextObserver() {
     let observer = JSContextObserver(webView: self)
-    let key: StaticString = __FUNCTION__
-    objc_setAssociatedObject(self, key.utf8Start, observer, .OBJC_ASSOCIATION_RETAIN)
+    let key: StaticString = #function
+    objc_setAssociatedObject(self, key.utf8Start, observer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
   }
   
 }
@@ -30,10 +30,6 @@ private let JSContextDidCreateNotificaiton = "DOMContentLoadedDelegate.JSContext
 private extension NSObject {
   
   @objc func webView(webView: AnyObject, didCreateJavaScriptContext context: JSContext, forFrame frame: AnyObject) {
-    // key as "parent" + "Frame" to avoid private API detection
-    let key = "parent" + "Frame"
-    let sel = Selector(key)
-    guard frame.respondsToSelector(sel) && frame.valueForKey(key) == nil else { return }
     NSNotificationCenter.defaultCenter().postNotificationName(JSContextDidCreateNotificaiton, object: context)
   }
   
@@ -43,14 +39,20 @@ private final class JSContextObserver: NSObject {
   
   weak var webView: UIWebView?
   
+  var observer: AnyObject?
+  
   init(webView wv: UIWebView) {
     super.init()
     webView = wv
-    NSNotificationCenter.defaultCenter().addObserverForName(JSContextDidCreateNotificaiton, object: nil, queue: nil, usingBlock: handleJSContextDidCreateNotitification)
+    observer = NSNotificationCenter.defaultCenter().addObserverForName(JSContextDidCreateNotificaiton, object: nil, queue: nil, usingBlock: handleJSContextDidCreateNotitification)
+  }
+  
+  deinit {
+    if let o = observer { NSNotificationCenter.defaultCenter().removeObserver(o) }
   }
   
   func handleJSContextDidCreateNotitification(notifaction: NSNotification) {
-    let sel: Selector = "DOMContentLoaded:"
+    let sel = #selector(DOMContentLoadedDelegate.DOMContentLoaded(_:))
     guard
       let jsContextInNotification = notifaction.object as? JSContext,
       let jsContext = webView?.valueForKeyPath("documentView.webView.mainFrame.javaScriptContext") as? JSContext,
